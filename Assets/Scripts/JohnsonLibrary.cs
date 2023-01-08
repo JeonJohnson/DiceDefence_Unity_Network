@@ -391,8 +391,8 @@ public static class Defines
 	public const int ally = 0;
 	public const int enemy = 1;
 
-	public const float winCX = 1600f;
-	public const float winCY = 900f;
+	public const int winCX = 1024;
+	public const int winCY = 768;
 
 	public const float gravity = -9.8f;
 

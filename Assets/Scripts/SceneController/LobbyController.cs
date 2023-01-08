@@ -19,7 +19,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
     public TMP_InputField roomNameIF;
 
-    public CanvasGroup roomCg;
+    public RoomWindow roomWindow;
    
 
     private void CheckServerSetting()
@@ -46,8 +46,13 @@ public class LobbyController : MonoBehaviourPunCallbacks
     }
 
 
-    private void CreateRoom()
+    public void CreateRoom()
     {
+        if (PhotonNetwork.CountOfRooms >= 4)
+        { 
+            //방 더 못 만들게 하기
+        }
+
         string roomName;
         roomName = roomNameIF.text.Equals(string.Empty) ? $"안오면 지상렬_{PhotonNetwork.CountOfRooms + 1 }" : roomNameIF.text;
 
@@ -60,6 +65,8 @@ public class LobbyController : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(roomName, roomOption);
     }
 
+    
+
 
 	private void Awake()
 	{
@@ -71,6 +78,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
     {
         CheckServerSetting();
         nickNameTxt.text = $"반갑읍니다. \n{PhotonNetwork.NickName}님.";
+        roomWindow.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -92,6 +100,6 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
 	public override void OnJoinedRoom()
 	{
-
+        roomWindow.gameObject.SetActive(true);
 	}
 }

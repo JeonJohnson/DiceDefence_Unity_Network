@@ -173,7 +173,7 @@ public class GameManager : Manager<GameManager>
         DontDestroyOnLoad(this.gameObject);
         InstantiateManagerBoxes(out managerBox, out managerBox_Destory);
 
-        
+        Screen.SetResolution(Defines.winCX, Defines.winCY,false);
 
         DOTween.Init();
     }
