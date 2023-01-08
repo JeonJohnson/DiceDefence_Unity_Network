@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7347548922829775905
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3203067770294627575}
+  - component: {fileID: 3661619492233055396}
+  m_Layer: 0
+  m_Name: ObjectManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3203067770294627575
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7347548922829775905}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3661619492233055396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7347548922829775905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfd2a5166101e694db63b7ab1cbc5972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 1885070503326851956, guid: 5eb573b1083cb2e4abd1f65cd11674d3, type: 3}
+  playerScript: {fileID: 0}
+  boardPrefab: {fileID: 7869850283165501327, guid: 8d779f19db442864b975d3bf5d3d9c7a, type: 3}
+  diceBoardScript: {fileID: 0}
+  enemyPathScript: {fileID: 0}
+  diceOriginStat:
+  - eName: 0
+    strName: Default
+    targetPriority: 0
+    atkType: 1
+    dmg: 40
+    dmgIncrease: 10
+    critPercent: 10
+    critIncrease: 5
+    atkTime: 1
+    atkTimeIncrease: 0.05
+    coolTime: 0
+    coolTimeIncrease: 0
+    skillDuration: 0
+    skillDurationIncrease: 0
+  - eName: 1
+    strName: Electric
+    targetPriority: 2
+    atkType: 2
+    dmg: 30
+    dmgIncrease: 10
+    critPercent: 5
+    critIncrease: 10
+    atkTime: 0.8
+    atkTimeIncrease: 0.01
+    coolTime: 0
+    coolTimeIncrease: 0
+    skillDuration: 0
+    skillDurationIncrease: 0
+  - eName: 2
+    strName: Iron
+    targetPriority: 6
+    atkType: 1
+    dmg: 100
+    dmgIncrease: 30
+    critPercent: 5
+    critIncrease: 5
+    atkTime: 1.5
+    atkTimeIncrease: 0
+    coolTime: 0
+    coolTimeIncrease: 0
+    skillDuration: 0
+    skillDurationIncrease: 0
+  - eName: 3
+    strName: Wind
+    targetPriority: 0
+    atkType: 1
+    dmg: 20
+    dmgIncrease: 5
+    critPercent: 5
+    critIncrease: 5
+    atkTime: 0.5
+    atkTimeIncrease: 0.02
+    coolTime: 5
+    coolTimeIncrease: 0
+    skillDuration: 2
+    skillDurationIncrease: 0.1
+  diceTexList:
+  - {fileID: 2800000, guid: 0a0dad73a1d81b54593fbf80ef350a26, type: 3}
+  - {fileID: 2800000, guid: 4e631e30c13045c478ea33d4ec98b6b2, type: 3}
+  - {fileID: 2800000, guid: 219db25ad945c4540990e72e70e6251c, type: 3}
+  - {fileID: 2800000, guid: 2d4a4c3dd9fd79e4bb05c772f95bcdce, type: 3}
+  colorList:
+  - {r: 0.9019608, g: 0.8156863, b: 0.6313726, a: 1}
+  - {r: 1, g: 1, b: 0, a: 1}
+  - {r: 0.11372549, g: 0.16862746, b: 0.96862745, a: 1}
+  - {r: 0, g: 0.91372555, b: 0.9058824, a: 1}
+  spotTexList:
+  - {fileID: 2800000, guid: 7f594f1ab5f8e4541930cf77b4f33bd7, type: 3}
+  - {fileID: 2800000, guid: 479d73d2e041dbd46a534673e93754ea, type: 3}
+  - {fileID: 2800000, guid: 655c0d6368a5a564e819f3cc54ccb27d, type: 3}
+  - {fileID: 2800000, guid: a2a8c064496e88c4182be709f23bc12c, type: 3}
+  - {fileID: 2800000, guid: 7c33cc69e2ef96342ae0eb4489a14436, type: 3}
+  - {fileID: 2800000, guid: 4938c21228d3fec439a3b644233fe5c8, type: 3}
+  - {fileID: 2800000, guid: 1e341eea36020c5429baca9679afd362, type: 3}
+  diceList: []
+  selectedDice: {fileID: 0}
+  mouseOnDice: {fileID: 0}
+  enemyList: []
