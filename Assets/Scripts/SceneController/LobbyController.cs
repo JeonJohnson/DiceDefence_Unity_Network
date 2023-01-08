@@ -17,6 +17,10 @@ public class LobbyController : MonoBehaviourPunCallbacks
     public TextMeshProUGUI serverStateTxt;
     public TextMeshProUGUI playerCountTxt;
 
+    public TMP_InputField roomNameIF;
+
+    public CanvasGroup roomCg;
+   
 
     private void CheckServerSetting()
     {
@@ -28,7 +32,6 @@ public class LobbyController : MonoBehaviourPunCallbacks
             PhotonNetwork.ConnectUsingSettings();
         }
     } 
-
 
     private void UpdatePlayerCount()
     {
@@ -42,7 +45,21 @@ public class LobbyController : MonoBehaviourPunCallbacks
         serverStateTxt.text = PhotonNetwork.NetworkClientState.ToString();
     }
 
-    
+
+    private void CreateRoom()
+    {
+        string roomName;
+        roomName = roomNameIF.text.Equals(string.Empty) ? $"안오면 지상렬_{PhotonNetwork.CountOfRooms + 1 }" : roomNameIF.text;
+
+
+        RoomOptions roomOption = new RoomOptions();
+        roomOption.MaxPlayers = 4;
+        roomOption.IsOpen = true;
+        roomOption.IsVisible = true;
+
+        PhotonNetwork.CreateRoom(roomName, roomOption);
+    }
+
 
 	private void Awake()
 	{
@@ -68,4 +85,13 @@ public class LobbyController : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
         Debug.Log("마스터 서버 접속 성공");
     }
+	public override void OnJoinedLobby()
+	{
+        Debug.Log("로비 접속 성공");
+    }
+
+	public override void OnJoinedRoom()
+	{
+
+	}
 }

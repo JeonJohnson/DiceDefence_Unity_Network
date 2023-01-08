@@ -52,6 +52,10 @@ public class TitleSceneController : MonoBehaviourPunCallbacks
             isReady = true;
             TryConnectMasterServer();
         }
+        else if (isReady)
+        {
+            serverStateTxt.text = PhotonNetwork.NetworkClientState.ToString();
+        }
         
 	}
 
