@@ -20,7 +20,8 @@ public class LobbyController : MonoBehaviourPunCallbacks
     public TMP_InputField roomNameIF;
 
     public RoomWindow roomWindow;
-   
+
+    public string selectedRoomName = string.Empty;
 
     private void CheckServerSetting()
     {
@@ -45,6 +46,11 @@ public class LobbyController : MonoBehaviourPunCallbacks
         serverStateTxt.text = PhotonNetwork.NetworkClientState.ToString();
     }
 
+    public void RefreshRoomList()
+    {
+        //for(int i =0; i<PhotonNetwork.room)
+
+    }
 
     public void CreateRoom()
     {
@@ -64,9 +70,34 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
         PhotonNetwork.CreateRoom(roomName, roomOption);
     }
+    public void EnterRoom()
+    {
+        //PhotonNetwork.JoinRoom
 
+    }
+
+    public void EnterRandomRoom()
+    {
+        if (PhotonNetwork.CountOfRooms == 0)
+        {
+            CreateRoom();    
+        }
+        else
+        { 
+            PhotonNetwork.JoinRandomRoom();
+        }   
+
+    }
+
+
+
+ 
+
+    public void SelectRoom()
+    { 
+        
     
-
+    }
 
 	private void Awake()
 	{
@@ -101,5 +132,10 @@ public class LobbyController : MonoBehaviourPunCallbacks
 	public override void OnJoinedRoom()
 	{
         roomWindow.gameObject.SetActive(true);
-	}
+     
+    }
+
+
+
+	//public override void OnCre
 }
