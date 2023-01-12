@@ -419,9 +419,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f26d4e8b7176ad84491a2f698615921a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomName: {fileID: 7237823167085286595}
-  roomMasterName: {fileID: 2160180148084540559}
-  roomPlayerCount: {fileID: 4341806704163698883}
+  roomNameTmp: {fileID: 7237823167085286595}
+  roomMasterNameTmp: {fileID: 2160180148084540559}
+  roomPlayerCountTmp: {fileID: 4341806704163698883}
 --- !u!1 &7237823167085286593
 GameObject:
   m_ObjectHideFlags: 0

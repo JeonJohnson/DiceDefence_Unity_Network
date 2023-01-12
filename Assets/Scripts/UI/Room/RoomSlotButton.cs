@@ -7,13 +7,23 @@ public class RoomSlotButton : MonoBehaviour
 {
 
     LobbyController lobby;
-    public TextMeshProUGUI roomName;
-    public TextMeshProUGUI roomMasterName;
-    public TextMeshProUGUI roomPlayerCount;
+    public TextMeshProUGUI roomNameTmp;
+    public TextMeshProUGUI roomMasterNameTmp;
+    public TextMeshProUGUI roomPlayerCountTmp;
     private void OnClick()
     {
-        lobby.selectedRoomName = roomName.text;
+        lobby.selectedRoomName = roomNameTmp.text;
     }
+
+
+    public void SettingRoomTexts(string roomName, string masterName, int curCount, int maxCount)
+    {
+        roomNameTmp.text = roomName;
+        roomMasterNameTmp.text = masterName;
+        roomPlayerCountTmp.text = $"{curCount} / {maxCount}";
+    }
+
+    
 
 	private void Awake()
 	{

@@ -19,6 +19,13 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
     public TMP_InputField roomNameIF;
 
+    public List<RoomInfo> roomList = new List<RoomInfo>();
+    public GameObject roomSlotPrefab;
+    public Transform roomListTr;
+    public List<RoomSlotButton> roomSlotList;
+
+    public int maxRoomCount;
+
     public RoomWindow roomWindow;
 
     public string selectedRoomName = string.Empty;
@@ -38,7 +45,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
     {
         int all = PhotonNetwork.CountOfPlayers;
         int lobby = all - PhotonNetwork.CountOfPlayersInRooms;
-        playerCountTxt.text = $"전체 접속 인원 : {PhotonNetwork.CountOfPlayers} /n 로비 인원 : {lobby}";
+        playerCountTxt.text = $"전체 접속 인원 : {PhotonNetwork.CountOfPlayers} \n로비 인원 : {lobby}";
     }
 
     private void UpdateLobbyNetworkState()
@@ -46,16 +53,39 @@ public class LobbyController : MonoBehaviourPunCallbacks
         serverStateTxt.text = PhotonNetwork.NetworkClientState.ToString();
     }
 
-    public void RefreshRoomList()
+    private void CreateRoomSlots()
     {
-        //for(int i =0; i<PhotonNetwork.room)
+        roomSlotList = new List<RoomSlotButton>();
+        int firstYPos = 345;
+        for (int i = 0; i < maxRoomCount; ++i)
+        {
+            GameObject slot = Instantiate(roomSlotPrefab,roomListTr);
+            Vector2 pos = new Vector2(0, firstYPos - (110 * i));
+            slot.GetComponent<RectTransform>().anchoredPosition = pos;
+            roomSlotList.Add(slot.GetComponent<RoomSlotButton>());
+            slot.SetActive(false);
+        }
 
     }
 
-    public void CreateRoom()
+    public void RefreshRoomSlotUIList()
+    {
+        for (int i = 0; i < roomList.Count; ++i)
+        {
+            RoomInfo info = roomList[i];
+            roomSlotList[i].gameObject.SetActive(true);
+            //PhotonNetwork.id
+            roomSlotList[i].SettingRoomTexts(info.Name, "TestMasterName", info.PlayerCount, info.MaxPlayers);
+            //마스터 닉네임은 그놈의 photonView Component가져와서 owner.nickName으로 가져와야함.
+        }
+    }
+
+
+	public void CreateRoom()
     {
         if (PhotonNetwork.CountOfRooms >= 4)
-        { 
+        {
+            return;
             //방 더 못 만들게 하기
         }
 
@@ -65,8 +95,8 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
         RoomOptions roomOption = new RoomOptions();
         roomOption.MaxPlayers = 4;
-        roomOption.IsOpen = true;
-        roomOption.IsVisible = true;
+        //roomOption.IsOpen = true;
+        //roomOption.IsVisible = true;
 
         PhotonNetwork.CreateRoom(roomName, roomOption);
     }
@@ -88,10 +118,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
         }   
 
     }
-
-
-
- 
+    
 
     public void SelectRoom()
     { 
@@ -110,6 +137,8 @@ public class LobbyController : MonoBehaviourPunCallbacks
         CheckServerSetting();
         nickNameTxt.text = $"반갑읍니다. \n{PhotonNetwork.NickName}님.";
         roomWindow.gameObject.SetActive(false);
+
+        CreateRoomSlots();
     }
 
     // Update is called once per frame
@@ -130,12 +159,44 @@ public class LobbyController : MonoBehaviourPunCallbacks
     }
 
 	public override void OnJoinedRoom()
-	{
+	{ 
         roomWindow.gameObject.SetActive(true);
      
     }
 
 
+    public override void OnRoomListUpdate(List<RoomInfo> _roomList)
+    {
+        //int roomCount = _roomList.Count;
 
-	//public override void OnCre
+        //roomList = _roomList; 이런식으로 그냥 받는게 아니라 따로 있는 놈들은 업뎃해주고
+        //없앨놈들은 지우는 식으로 update 해야하는 듯...
+        for (int i = 0; i < _roomList.Count; ++i)
+        {
+            RoomInfo serverCurRoom = _roomList[i];
+
+            if (!serverCurRoom.RemovedFromList)
+            { //방 지우기 예약 bool값임.
+                if (!roomList.Contains(serverCurRoom))
+                {//리스트에 추가 되어 있지 않은 경우
+                    roomList.Add(serverCurRoom);
+                }
+                else
+                {//리스트에 이미 추가되어 있는 경우
+                    //새로운걸로 업데이트
+                    roomList[roomList.IndexOf(serverCurRoom)] = serverCurRoom;
+                }
+            }
+            else if (roomList.IndexOf(_roomList[i]) != -1)
+            { //지울놈은 아닌데 리스트에 없는 경우?
+                roomList.RemoveAt(roomList.IndexOf(_roomList[i]));
+            }
+        }
+
+        RefreshRoomSlotUIList();
+        Debug.Log("룸 업뎃됨!");
+
+    }
+
+    //public override void OnCre
 }
