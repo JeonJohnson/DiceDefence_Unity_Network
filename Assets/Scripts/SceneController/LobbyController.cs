@@ -68,15 +68,37 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
     }
 
+    public void RefreshLobby()
+    {
+        PhotonNetwork.JoinLobby();
+    }
+
+
     public void RefreshRoomSlotUIList()
     {
-        for (int i = 0; i < roomList.Count; ++i)
+        //for (int i = 0; i < roomList.Count; ++i)
+        //{
+        //    RoomInfo info = roomList[i];
+        //    roomSlotList[i].gameObject.SetActive(true);
+        //    //PhotonNetwork.id
+        //    roomSlotList[i].SettingRoomTexts(info.Name, "TestMasterName", info.PlayerCount, info.MaxPlayers);
+        //    //마스터 닉네임은 그놈의 photonView Component가져와서 owner.nickName으로 가져와야함.
+        //}
+
+        for (int i = 0; i < maxRoomCount; ++i)
         {
-            RoomInfo info = roomList[i];
-            roomSlotList[i].gameObject.SetActive(true);
-            //PhotonNetwork.id
-            roomSlotList[i].SettingRoomTexts(info.Name, "TestMasterName", info.PlayerCount, info.MaxPlayers);
-            //마스터 닉네임은 그놈의 photonView Component가져와서 owner.nickName으로 가져와야함.
+            if (i < roomList.Count)
+            {
+                RoomInfo info = roomList[i];
+                roomSlotList[i].gameObject.SetActive(true);
+                //PhotonNetwork.id
+                roomSlotList[i].SettingRoomTexts(info.Name, "TestMasterName", info.PlayerCount, info.MaxPlayers);
+                //마스터 닉네임은 그놈의 photonView Component가져와서 owner.nickName으로 가져와야함.
+            }
+            else
+			{
+                roomSlotList[i].gameObject.SetActive(false);
+            }
         }
     }
 
@@ -102,8 +124,10 @@ public class LobbyController : MonoBehaviourPunCallbacks
     }
     public void EnterRoom()
     {
-        //PhotonNetwork.JoinRoom
-
+        if (!selectedRoomName.Equals(string.Empty))
+        {
+            PhotonNetwork.JoinRoom(selectedRoomName);
+        }
     }
 
     public void EnterRandomRoom()
@@ -116,14 +140,27 @@ public class LobbyController : MonoBehaviourPunCallbacks
         { 
             PhotonNetwork.JoinRandomRoom();
         }   
-
     }
     
 
-    public void SelectRoom()
-    { 
-        
-    
+    public void SelectRoom(RoomSlotButton script)
+	{
+		if (selectedRoomName.Equals(script.roomNameTmp.text))
+		{
+            script.SelectRelease();
+            selectedRoomName = string.Empty;
+            return;
+        }
+
+		selectedRoomName = script.roomNameTmp.text;
+        for (int i = 0; i < roomList.Count; ++i)
+        {
+            if (roomSlotList[i] != script)
+            { roomSlotList[i].SelectRelease(); }
+            else
+            { script.Selected(); }
+        }
+
     }
 
 	private void Awake()
@@ -161,11 +198,21 @@ public class LobbyController : MonoBehaviourPunCallbacks
 	public override void OnJoinedRoom()
 	{ 
         roomWindow.gameObject.SetActive(true);
-     
+
+
+        Debug.Log("방 입장 완료");
+    }
+
+	public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+	{
+
+
+        Debug.Log($"{newPlayer.NickName}님이(가) '{PhotonNetwork.CurrentRoom.Name}'방에 접속 했습니다.");
     }
 
 
-    public override void OnRoomListUpdate(List<RoomInfo> _roomList)
+
+	public override void OnRoomListUpdate(List<RoomInfo> _roomList)
     {
         //int roomCount = _roomList.Count;
 
@@ -195,7 +242,6 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
         RefreshRoomSlotUIList();
         Debug.Log("룸 업뎃됨!");
-
     }
 
     //public override void OnCre
