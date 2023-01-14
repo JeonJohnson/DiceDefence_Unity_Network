@@ -42,7 +42,6 @@ public class Chatting : MonoBehaviourPunCallbacks
     public void ReceiveMsg(string msg)
 	{
 		chatLogTxt.text += "\n" + msg;
-        
 	}
 
 	private void Awake()
