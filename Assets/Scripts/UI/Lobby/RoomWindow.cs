@@ -12,14 +12,16 @@ using DG.Tweening;
 
 public class RoomWindow : MonoBehaviourPunCallbacks
 {
-
     public PhotonView phView;
 
     [SerializeField]
     TextMeshProUGUI roomNameTmp;
 
-    [SerializeField]
-    List<GameObject> playerList;//이거 나중에 각각 PlayerList 혹은 Slot으로 코드만들어서 넣어주기
+    
+    public GameObject PlayerSlotPrefab;
+    public RectTransform playerListTr;
+    public List<RoomPlayerSlot> playerSlotList = new List<RoomPlayerSlot>();
+    public RoomPlayerSlot mySlot;
 
     [SerializeField]
     TMP_InputField chatInputField;
@@ -30,6 +32,8 @@ public class RoomWindow : MonoBehaviourPunCallbacks
     [SerializeField]
     Button chatSendBtn;
     
+    
+
     //List<string> chatMsgList;
 
     public void ChatSend() 
@@ -70,14 +74,40 @@ public class RoomWindow : MonoBehaviourPunCallbacks
     }
 
     public void ExitLobby()
+    {
+        this.gameObject.SetActive(false);
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public void GetReady()
     { 
         
     }
 
+    public void GetStart()
+    { 
+    
+    }
+
+
+    private void SettingPlayerSlots()
+    {
+        Vector2 pos = new Vector2(0f, -12f);
+        for (int i = 0; i < PhotonNetwork.CurrentRoom.MaxPlayers; ++i)
+        {
+            GameObject newSlot = Instantiate(PlayerSlotPrefab, playerListTr);
+            pos.x = -384f + (i*256f);
+            newSlot.GetComponent<RectTransform>().anchoredPosition = pos;
+            playerSlotList.Add(newSlot.GetComponent<RoomPlayerSlot>());
+        }
+    }
+
     public void UpdatePlayerList()
     { 
+        //이것도 그냥 RPC 보내고 해야할듯...?
+        //하나씩 들어올때마다 새로 만들고 나가면 지우기,,,???
+
         
-    
     }
 
 	void Awake()
@@ -90,6 +120,7 @@ public class RoomWindow : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.IsMessageQueueRunning = true;
         chatLogTxt.text = string.Empty;
+        SettingPlayerSlots();
     }
 
     // Update is called once per frame
