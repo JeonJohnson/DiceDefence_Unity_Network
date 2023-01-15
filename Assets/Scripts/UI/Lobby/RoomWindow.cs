@@ -17,7 +17,7 @@ public class RoomWindow : MonoBehaviourPunCallbacks
     [SerializeField]
     TextMeshProUGUI roomNameTmp;
 
-    
+
     public GameObject PlayerSlotPrefab;
     public RectTransform playerListTr;
     public List<RoomPlayerSlot> playerSlotList = new List<RoomPlayerSlot>();
@@ -31,12 +31,14 @@ public class RoomWindow : MonoBehaviourPunCallbacks
     TextMeshProUGUI chatLogTxt;
     [SerializeField]
     Button chatSendBtn;
-    
-    
+
+    [SerializeField]
+    Button startBtn;
+
 
     //List<string> chatMsgList;
 
-    public void ChatSend() 
+    public void ChatSend()
     {
         if (chatInputField.text.Equals(string.Empty))
         {
@@ -51,8 +53,9 @@ public class RoomWindow : MonoBehaviourPunCallbacks
         chatInputField.text = string.Empty;
     }
 
-    public void ChatNotice(string msg)
+    public void ChatNotice(string _msg)
     {
+        string msg = "**Notice** " + _msg;
         phView.RPC("ChatRPC", RpcTarget.All, msg);
         chatInputField.ActivateInputField();
         chatInputField.text = string.Empty;
@@ -80,22 +83,67 @@ public class RoomWindow : MonoBehaviourPunCallbacks
     }
 
     public void GetReady()
-    { 
-        
+    {
+        mySlot.Ready(!mySlot.isReady);
     }
+
 
     public void GetStart()
-    { 
-    
+    {
+        int playerCount = PhotonNetwork.CountOfPlayersInRooms;
+
+        if (playerCount == 1)
+        {
+            PhotonNetwork.LoadLevel("03_InGame");
+        }
+        else
+        {
+
+            Photon.Realtime.Player[] playerTempList = PhotonNetwork.PlayerList;
+
+            int readyCount = 0;
+            for (int i = 0; i < playerCount; ++i)
+            {
+                readyCount += (playerSlotList[i].isReady ? 1 : 0);
+            }
+
+            if (readyCount == playerCount - 1)
+            {
+                PhotonNetwork.LoadLevel("03_InGame");
+            }
+        }
     }
 
+    private void SettingButton(bool isMaster)
+    {
+        TextMeshProUGUI text = startBtn.GetComponentInChildren<TextMeshProUGUI>();
+        startBtn.onClick.RemoveAllListeners();
+
+        if (isMaster)
+        {
+            text.text = "Start";
+            startBtn.onClick.AddListener(GetStart);
+        }
+        else
+        {
+            text.text = "Ready";
+            startBtn.onClick.AddListener(GetReady);
+        }
+    }
 
     private void SettingPlayerSlots()
     {
+        if (playerSlotList.Count != 0)
+        {
+            return;
+        }
+
         Vector2 pos = new Vector2(0f, -12f);
         for (int i = 0; i < 4; ++i)
         {
-            GameObject newSlot = Instantiate(PlayerSlotPrefab, playerListTr);
+            //GameObject newSlot = Instantiate(PlayerSlotPrefab, playerListTr);
+            GameObject newSlot = PhotonNetwork.Instantiate("PlayerSlot", Vector3.zero, Quaternion.identity);
+            newSlot.transform.parent = playerListTr;
             pos.x = -384f + (i*256f);
             newSlot.GetComponent<RectTransform>().anchoredPosition = pos;
             playerSlotList.Add(newSlot.GetComponent<RoomPlayerSlot>());
@@ -106,6 +154,13 @@ public class RoomWindow : MonoBehaviourPunCallbacks
     {
         //이것도 그냥 RPC 보내고 해야할듯...?
         //하나씩 들어올때마다 새로 만들고 나가면 지우기,,,???
+
+        if (playerSlotList.Count == 0)
+        {
+            SettingPlayerSlots();
+        }
+
+
         Photon.Realtime.Player[] playerTempList = PhotonNetwork.PlayerList;
 
         for (int i = 0; i < playerSlotList.Count; ++i)
@@ -119,8 +174,14 @@ public class RoomWindow : MonoBehaviourPunCallbacks
             bool isMaster = i == 0 ? true : false;
             string nickName = playerTempList[i].NickName;
 
-            playerSlotList[i].UpdateSlotInfo(isMaster, nickName);
+            if (nickName == PhotonNetwork.NickName)
+			{
+				mySlot = playerSlotList[i];
+                ChatNotice($"{mySlot.GetHashCode()}가 my Slot");
+			}
+			playerSlotList[i].UpdateSlotInfo(isMaster, nickName);
 
+            SettingButton(isMaster);
         }
 
     }
@@ -128,7 +189,8 @@ public class RoomWindow : MonoBehaviourPunCallbacks
 	void Awake()
 	{
         phView = GetComponent<PhotonView>();
-        SettingPlayerSlots();
+        Debug.Log(phView.ViewID);
+        
         chatLogTxt.text = string.Empty;
         PhotonNetwork.IsMessageQueueRunning = true;
     }
@@ -136,7 +198,7 @@ public class RoomWindow : MonoBehaviourPunCallbacks
 	// Start is called before the first frame update
 	void Start()
     {
-        
+        SettingPlayerSlots();
     }
 
     // Update is called once per frame
@@ -152,6 +214,11 @@ public class RoomWindow : MonoBehaviourPunCallbacks
 	{
         //UpdatePlayerList();
     }
+
+	public override void OnLeftRoom()
+	{
+        mySlot = null;
+	}
 
 	public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {

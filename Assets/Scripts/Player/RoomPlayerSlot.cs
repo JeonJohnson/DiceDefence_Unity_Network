@@ -25,11 +25,22 @@ public class RoomPlayerSlot : MonoBehaviour
     public bool amMaster;
     public bool isReady;
 
+    public void Ready(bool ready)
+    {
+        phView.RPC("RPCReady", RpcTarget.All, ready);
+    }
+
+    [PunRPC]
+    public void RPCReady(bool ready)
+    {
+        isReady = ready;
+        readyStateTxt.text = ready ? "Ready" : "-";
+    }
 
     public void UpdateSlotInfo(bool _master, string name)
     {
         amMaster = _master;
-        readyStateTxt.text = amMaster ? "Master" : "Ready";
+        readyStateTxt.text = amMaster ? "Master" : "-";
         nickNameTxt.text = name;
         profileImg.gameObject.SetActive(true);
     }

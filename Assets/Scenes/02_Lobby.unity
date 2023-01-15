@@ -3460,7 +3460,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1574433473}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3471,7 +3471,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.000061035156, y: 0}
   m_SizeDelta: {x: 307.2, y: 300}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1574433475
@@ -3655,6 +3655,7 @@ MonoBehaviour:
   chatScrollBar: {fileID: 1755683238}
   chatLogTxt: {fileID: 2125840302}
   chatSendBtn: {fileID: 1792411262}
+  startBtn: {fileID: 1871445534}
 --- !u!114 &1601627083
 MonoBehaviour:
   m_ObjectHideFlags: 0

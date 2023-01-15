@@ -631,6 +631,8 @@ MonoBehaviour:
   profileImg: {fileID: 3910474507703801501}
   nickNameTxt: {fileID: 4413218847262576354}
   readyStateTxt: {fileID: 4154574272047648926}
+  amMaster: 0
+  isReady: 0
 --- !u!114 &8123980150495505626
 MonoBehaviour:
   m_ObjectHideFlags: 0
