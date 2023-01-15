@@ -93,7 +93,7 @@ public class RoomWindow : MonoBehaviourPunCallbacks
     private void SettingPlayerSlots()
     {
         Vector2 pos = new Vector2(0f, -12f);
-        for (int i = 0; i < PhotonNetwork.CurrentRoom.MaxPlayers; ++i)
+        for (int i = 0; i < 4; ++i)
         {
             GameObject newSlot = Instantiate(PlayerSlotPrefab, playerListTr);
             pos.x = -384f + (i*256f);
@@ -103,24 +103,40 @@ public class RoomWindow : MonoBehaviourPunCallbacks
     }
 
     public void UpdatePlayerList()
-    { 
+    {
         //이것도 그냥 RPC 보내고 해야할듯...?
         //하나씩 들어올때마다 새로 만들고 나가면 지우기,,,???
+        Photon.Realtime.Player[] playerTempList = PhotonNetwork.PlayerList;
 
-        
+        for (int i = 0; i < playerSlotList.Count; ++i)
+        {
+            if (i >= playerTempList.Length)
+            {
+                playerSlotList[i].UpdateSlotInfo();
+                continue;
+            }
+
+            bool isMaster = i == 0 ? true : false;
+            string nickName = playerTempList[i].NickName;
+
+            playerSlotList[i].UpdateSlotInfo(isMaster, nickName);
+
+        }
+
     }
 
 	void Awake()
 	{
         phView = GetComponent<PhotonView>();
-	}
+        SettingPlayerSlots();
+        chatLogTxt.text = string.Empty;
+        PhotonNetwork.IsMessageQueueRunning = true;
+    }
 
 	// Start is called before the first frame update
 	void Start()
     {
-        PhotonNetwork.IsMessageQueueRunning = true;
-        chatLogTxt.text = string.Empty;
-        SettingPlayerSlots();
+        
     }
 
     // Update is called once per frame
@@ -132,16 +148,24 @@ public class RoomWindow : MonoBehaviourPunCallbacks
         }
     }
 
+	public override void OnJoinedRoom()
+	{
+        //UpdatePlayerList();
+    }
 
-    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+	public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         ChatNotice($"{PhotonNetwork.NickName}님이(가) 입장하셨스빈다.");
-    //chatLogTxt.text += $"\n {PhotonNetwork.NickName}님이(가) 입장하셨스빈다.";
+        //chatLogTxt.text += $"\n {PhotonNetwork.NickName}님이(가) 입장하셨스빈다.";
+
+        UpdatePlayerList();
     }
 
 	public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
 	{
         ChatNotice($"{PhotonNetwork.NickName}님이(가) 퇴장하셨스빈다.");
         //chatLogTxt.text += $"\n {PhotonNetwork.NickName}님이(가) 퇴장하셨스빈다.";
+
+        UpdatePlayerList();
     }
 }

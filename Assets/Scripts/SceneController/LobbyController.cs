@@ -198,17 +198,16 @@ public class LobbyController : MonoBehaviourPunCallbacks
 	public override void OnJoinedRoom()
 	{ 
         roomWindow.gameObject.SetActive(true);
-
-
+        roomWindow.UpdatePlayerList();
         Debug.Log("방 입장 완료");
     }
 
-	public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
-	{
+	//public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+	//{
 
 
-        Debug.Log($"{newPlayer.NickName}님이(가) '{PhotonNetwork.CurrentRoom.Name}'방에 접속 했습니다.");
-    }
+ //       Debug.Log($"{newPlayer.NickName}님이(가) '{PhotonNetwork.CurrentRoom.Name}'방에 접속 했습니다.");
+ //   }
 
 
 

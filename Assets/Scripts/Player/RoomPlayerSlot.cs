@@ -31,6 +31,14 @@ public class RoomPlayerSlot : MonoBehaviour
         amMaster = _master;
         readyStateTxt.text = amMaster ? "Master" : "Ready";
         nickNameTxt.text = name;
+        profileImg.gameObject.SetActive(true);
+    }
+
+    public void UpdateSlotInfo()
+    { //사람 없을때
+        nickNameTxt.text = string.Empty;
+        readyStateTxt.text = string.Empty;
+        profileImg.gameObject.SetActive(false);
     }
 
 
